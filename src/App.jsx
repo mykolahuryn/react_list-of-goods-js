@@ -20,9 +20,9 @@ const SORT_FIELD_LENGTH = 'length';
 const SORT_FIELD_NAME = 'name';
 
 function getPreparedGoods(goods, sortField, isReversed) {
-  let preparedGoods = [...goods];
+  const preparedGoods = [...goods];
 
-  if(sortField) {
+  if (sortField) {
     switch (sortField) {
       case SORT_FIELD_LENGTH:
         preparedGoods.sort((a, b) => a.length - b.length);
@@ -35,8 +35,8 @@ function getPreparedGoods(goods, sortField, isReversed) {
     }
   }
 
-  if(isReversed) {
-    preparedGoods.reverse()
+  if (isReversed) {
+    preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -46,25 +46,28 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGoods(goodsFromServer, sortField, isReversed);
-  
 
-  const isResetVisible = visibleGoods.some((item, i) => item !== goodsFromServer[i]);
+  const isResetVisible = sortField !== '' || isReversed;
 
   return (
     <div className="section content">
       <div className="buttons">
-        <button 
+        <button
           type="button"
-          className={cn('button', 'is-info', { 'is-light': sortField !== SORT_FIELD_NAME })}
-          onClick={() => (setSortField(SORT_FIELD_NAME))}
+          className={cn('button', 'is-info', {
+            'is-light': sortField !== SORT_FIELD_NAME,
+          })}
+          onClick={() => setSortField(SORT_FIELD_NAME)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={cn('button', 'is-success', { 'is-light': sortField !== SORT_FIELD_LENGTH })}
-          onClick={() => (setSortField(SORT_FIELD_LENGTH))}
+          className={cn('button', 'is-success', {
+            'is-light': sortField !== SORT_FIELD_LENGTH,
+          })}
+          onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
@@ -79,21 +82,20 @@ export const App = () => {
           Reverse
         </button>
 
-
-        {isResetVisible
-          ? <button
-              type="button"
-              className="button is-danger is-light"
-              onClick={() => {
-                setSortField('');
-                setIsReversed(false);
-              }}
-            >
-              Reset
-            </button>
-          : ''
-        }
-        
+        {isResetVisible ? (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortField('');
+              setIsReversed(false);
+            }}
+          >
+            Reset
+          </button>
+        ) : (
+          ''
+        )}
       </div>
 
       <ul>
@@ -104,5 +106,5 @@ export const App = () => {
         ))}
       </ul>
     </div>
-  )
+  );
 };
